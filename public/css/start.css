@@ -1,0 +1,22 @@
+button {
+  text-transform: none !important; 
+}
+
+.hidden, .btn.hidden {
+  display: none; 
+}
+
+.infobox{
+  padding: 4px 8px; 
+  margin-bottom: 24px; 
+}
+
+.infobox-success{
+  background: rgb(232, 255, 233);
+  border: 1px solid rgb(0, 60, 0);
+}
+
+.infobox-error{
+  background: rgb(255, 243, 232);
+  border: 1px solid rgb(60, 0, 0);
+}

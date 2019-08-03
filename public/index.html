@@ -2,18 +2,27 @@
 <html>
 <head>
 <meta charset='UTF-8'>
-  <title>Hello World!</title>
+  <title>Fossil Media Server</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <link href='favicon.ico' rel='icon' type='icon/ico'>
-  <link rel='stylesheet' href='css/main.css' type='text/css'>
+  <link href='public/favicon.ico' rel='icon' type='icon/ico'>
+  <link rel='stylesheet' href='public/css/start.css' type='text/css'>
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css' integrity='sha256-OweaP/Ic6rsV+lysfyS4h+LM6sRwuO3euTYfr6M124g=' crossorigin='anonymous'/>
   <script defer src='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js' integrity='sha256-U/cHDMTIHCeMcvehBv1xQ052bPSbJtbuiw4QA9cTKz0=' crossorigin='anonymous'></script>
+  <script defer src='https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js' integrity='sha256-vrn14y7WH7zgEElyQqm2uCGSQrX/xjYDjniRUQx3NyU=' crossorigin='anonymous'></script>
   <script defer src='https://use.fontawesome.com/releases/v5.7.2/js/all.js' integrity='sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP' crossorigin='anonymous'></script>
-  <script defer src='js/main.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js"></script>
+  <script src="https://secure.aadcdn.microsoftonline-p.com/lib/1.0.0/js/msal.js"></script>
+  <script defer src='public/js/start.js'></script>
 </head>
 <body>
   <div class='container'>
-    Hello World!
+    <h2>Fossil Media Server</h2>
+    <br/><br/>
+    <div id='info-noAccess' class='infobox infobox-error hidden'><i class='fas fa-exclamation-triangle'></i> Your account does not have access to the Fossil Media Server. Contact your local IT office if you believe this is an error.</div>
+    <div id='info-permError' class='infobox infobox-error hidden'><i class='fas fa-exclamation-triangle'></i> You'll need to sign in first before accessing this page.</div>
+    <div id='info-success' class='infobox infobox-success hidden'><i class='fas fa-info-circle'></i> You've successfully signed into the Fossil Media Server. Files like <a href='secure/demo.html'>this super secure demo page</a> are now accessible.</div>
+    <button id='login-btn' class='btn green waves-effect' onclick='initLogin()'><i class='fab fa-fw fa-microsoft'></i> Sign In</button> <button id='logout-btn' onclick='logout()' class='btn blue waves-effect hidden'><i class='fas fa-sign-out-alt'></i> Sign Out</button>
+    <pre id='json'></pre>
   </div>
 </body>
 </html>

@@ -40,20 +40,23 @@ function initLogin() {
 }
 
 function logout() {
-  myMSALObj.logout();
+  $('#logout-btn').html(`<i class='fas fa-fw fa-circle-notch fa-spin'></i> Signing Out...`)
+  $.post('../signout', () => {
+    myMSALObj.logout();
+  })
 }
 
 function acquireTokenPopupAndCallMSGraph() {
   //Always start with acquireTokenSilent to obtain a token in the signed in user from cache
   myMSALObj.acquireTokenSilent(requestObj).then(function (tokenResponse) {
-      callMSGraph(graphConfig.graphMeEndpoint, tokenResponse.accessToken, graphAPICallback);
+      authenticate(tokenResponse.accessToken);
   }).catch(function (error) {
       console.log(error);
       // Upon acquireTokenSilent failure (due to consent or interaction or login required ONLY)
       // Call acquireTokenPopup(popup window) 
       if (requiresInteraction(error.errorCode)) {
           myMSALObj.acquireTokenPopup(requestObj).then(function (tokenResponse) {
-              callMSGraph(graphConfig.graphMeEndpoint, tokenResponse.accessToken, graphAPICallback);
+              authenticate(tokenResponse.accessToken);
           }).catch(function (error) {
               console.log(error);
           });
@@ -61,31 +64,30 @@ function acquireTokenPopupAndCallMSGraph() {
   });
 }
 
-function callMSGraph(theUrl, accessToken, callback) {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200)
-          callback(JSON.parse(this.responseText));
-  }
-  xmlHttp.open("GET", theUrl, true); // true for asynchronous
-  xmlHttp.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-  xmlHttp.send();
-}
-
-function graphAPICallback(data) {
-  document.getElementById("json").innerHTML = JSON.stringify(data, null, 2);
+function authenticate(accessToken) {
+  $.post('/verify', {
+    token: accessToken
+  }, (res) => {
+    $('#json').text(JSON.stringify(res, null, 2));  
+    if(res.access){
+      $('#info-success').show()}
+    else{
+      $('#info-permError').hide(); 
+      $('#info-noAccess').show()}
+    $('#login-btn').html(`<i class='fas fa-fw fa-check'></i> You're signed in!`)
+    $('#logout-btn').show(); 
+  })
 }
 
 function showWelcomeMessage() {
-  $('#login-btn').text('you\'re signed in!')
-  $('#login-btn').attr('click', logout);
+  $('#login-btn').html(`<i class='fas fa-fw fa-circle-notch fa-spin'></i> Verifying...`)
 }
 
 //This function can be removed if you do not need to support IE
 function acquireTokenRedirectAndCallMSGraph() {
   //Always start with acquireTokenSilent to obtain a token in the signed in user from cache
   myMSALObj.acquireTokenSilent(requestObj).then(function (tokenResponse) {
-      callMSGraph(graphConfig.graphMeEndpoint, tokenResponse.accessToken, graphAPICallback);
+      authenticate(tokenResponse.accessToken);
   }).catch(function (error) {
       console.log(error);
       // Upon acquireTokenSilent failure (due to consent or interaction or login required ONLY)
@@ -101,7 +103,7 @@ function authRedirectCallBack(error, response) {
       console.log(error);
   } else {
       if (response.tokenType === "access_token") {
-          callMSGraph(graphConfig.graphMeEndpoint, response.accessToken, graphAPICallback);
+          authenticate(response.accessToken);
       } else {
           console.log("token type is:" + response.tokenType);
       }
@@ -139,7 +141,7 @@ if (loginType === 'POPUP') {
   }
 }
 else if (loginType === 'REDIRECT') {
-  document.getElementById("SignIn").onclick = function () {
+  document.getElementById("login-btn").onclick = function () {
       myMSALObj.loginRedirect(requestObj);
   };
 
@@ -150,3 +152,9 @@ else if (loginType === 'REDIRECT') {
 } else {
   console.error('Please set a valid login type');
 }
+
+$('body').on('ready', () => {
+  if(location.hash === '#permError'){
+    $('#info-permError').show(); 
+  }
+})
