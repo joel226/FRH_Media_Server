@@ -15,7 +15,7 @@
     "express": "^4.16.4",
     "express-session": "^1.16.2",
     "jsonfile": "^5.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "mongodb": "^3.3.0-beta2",
     "request": "^2.88.0",
     "winston": "^3.2.1"
