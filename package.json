@@ -9,10 +9,10 @@
   "author": "Ryan Zhang",
   "license": "UNLICENSED",
   "dependencies": {
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.20.1",
     "connect-mongo": "^3.0.0",
     "cookie-parser": "^1.4.4",
-    "express": "^4.16.4",
+    "express": "^4.18.2",
     "express-session": "^1.16.2",
     "jsonfile": "^5.0.0",
     "moment": "^2.24.0",
